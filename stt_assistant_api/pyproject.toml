@@ -1,0 +1,18 @@
+[tool.poetry]
+package-mode = false
+name = "stt-assistant-api"
+version = "0.1.0"
+description = "STT-Assistant API"
+authors = ["moliinyk maks.oliynik228@gmail.com"]
+
+[tool.poetry.dependencies]
+python = ">=3.11"
+fastapi = "^0.118.0"
+uvicorn = "^0.37.0"
+gtts = "^2.5.4"
+python-dotenv = "^1.1.1"
+jupyterlab = "^4.4.9"
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
