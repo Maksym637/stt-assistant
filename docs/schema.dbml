@@ -1,0 +1,20 @@
+Table  users {
+    id int [pk, increment]
+    auth0_id varchar [unique]
+    email varchar
+}
+
+Table  records {
+    id int [pk, increment]
+    audio_url varchar
+    created_at timestamp
+    user_id int [ref: > users.id]
+}
+
+Table transcriptions {
+    id int [pk, increment]
+    transcription text
+    language_code varchar
+    created_at timestamp
+    record_id int [ref: > records.id]
+}
