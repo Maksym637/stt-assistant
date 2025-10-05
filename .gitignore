@@ -142,6 +142,7 @@ celerybeat.pid
 .api.env
 .azure.env
 .client.env
+.db.env
 
 # Spyder project settings
 .spyderproject

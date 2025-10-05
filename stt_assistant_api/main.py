@@ -1,15 +1,30 @@
-import os
-from dotenv import load_dotenv
 from fastapi import FastAPI
 
+from core.db_session import Base, engine
 
-load_dotenv()
+from models.user import User
+from models.record import Record
+from models.transcription import Transcription
 
 
 app = FastAPI(
-    title=f"stt-assistant-api-{os.getenv('ENV')}",
+    title="stt-assistant-api",
     description="The STT-Assistant API that transcribes audio into editable text",
 )
+
+
+@app.on_event("startup")
+def on_startup():
+    print("Creating tables...")
+    Base.metadata.create_all(bind=engine)
+    print("Tables created!")
+
+
+@app.on_event("shutdown")
+def on_shutdown():
+    print("Dropping tables...")
+    Base.metadata.drop_all(bind=engine)
+    print("Tables dropped!")
 
 
 @app.get("/transcriber")

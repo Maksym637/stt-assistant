@@ -12,6 +12,8 @@ uvicorn = "^0.37.0"
 gtts = "^2.5.4"
 python-dotenv = "^1.1.1"
 jupyterlab = "^4.4.9"
+sqlalchemy = "^2.0.43"
+psycopg2-binary = "^2.9.10"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
