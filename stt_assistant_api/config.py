@@ -25,7 +25,10 @@ class AZSettings:
 
 
 class APISettings:
-    pass
+    ENV = os.getenv("ENV")
+
+    AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
+    AUTH0_AUDIENCE = os.getenv("AUTH0_AUDIENCE")
 
 
 db_settings = DBSettings()

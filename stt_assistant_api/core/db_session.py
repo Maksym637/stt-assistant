@@ -4,6 +4,8 @@ from sqlalchemy.orm import DeclarativeMeta, declarative_base, sessionmaker
 from config import db_settings
 
 
+Base: DeclarativeMeta = declarative_base()
+
 engine = create_engine(
     url=(
         f"postgresql+psycopg2://{db_settings.DB_USER}:"
@@ -14,4 +16,13 @@ engine = create_engine(
     echo=True,
 )
 SessionLocal = sessionmaker(bind=engine)
-Base: DeclarativeMeta = declarative_base()
+
+
+def get_db():
+    db = SessionLocal()
+    try:
+
+        yield db
+
+    finally:
+        db.close()
