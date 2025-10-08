@@ -6,7 +6,7 @@ from schemas.user import UserCreate
 
 
 def create_user(db: Session, data: UserCreate):
-    user = UserCreate(auth0_id=data.auth0_id, email=data.email)
+    user = User(auth0_id=data.auth0_id, email=data.email)
 
     db.add(user)
     db.commit()

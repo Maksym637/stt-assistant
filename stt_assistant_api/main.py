@@ -2,15 +2,18 @@ from fastapi import FastAPI
 
 from core.db_session import Base, engine
 
-from models.user import User
 from models.record import Record
 from models.transcription import Transcription
+
+from api.router import api_router
 
 
 app = FastAPI(
     title="stt-assistant-api",
     description="The STT-Assistant API that transcribes audio into editable text",
 )
+
+app.include_router(api_router)
 
 
 @app.on_event("startup")
@@ -25,8 +28,3 @@ def on_shutdown():
     print("Dropping tables...")
     Base.metadata.drop_all(bind=engine)
     print("Tables dropped!")
-
-
-@app.get("/transcriber")
-def perform_transcription():
-    return {"message": "Hello STT-Assistant API!"}
