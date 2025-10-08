@@ -11,7 +11,10 @@ class Record(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     audio_url = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.timezone.utc)
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.datetime.now(datetime.timezone.utc),
+    )
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
 
     user = relationship("User", back_populates="records")

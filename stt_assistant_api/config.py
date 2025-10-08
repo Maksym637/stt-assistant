@@ -14,7 +14,8 @@ class AZSettings:
     # TODO
 
     # Configurations for Azure Blob Storage
-    # TODO
+    STORAGE_CONNECTION_STRING = os.getenv("STORAGE_CONNECTION_STRING")
+    BLOB_CONTAINER = os.getenv("BLOB_CONTAINER")
 
     # Configurations for Azure Database for PostgreSQL
     DB_HOST = os.getenv("DB_HOST")

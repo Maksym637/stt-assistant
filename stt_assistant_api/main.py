@@ -2,9 +2,6 @@ from fastapi import FastAPI
 
 from core.db_session import Base, engine
 
-from models.record import Record
-from models.transcription import Transcription
-
 from api.router import api_router
 
 

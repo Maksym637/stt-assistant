@@ -12,7 +12,10 @@ class Transcription(Base):
     id = Column(Integer, primary_key=True, index=True)
     transcription = Column(Text, nullable=False)
     language_code = Column(String, nullable=False)
-    created_at = Column(DateTime, default=datetime.timezone.utc)
+    created_at = Column(
+        DateTime(timezone=True),
+        default=lambda: datetime.datetime.now(datetime.timezone.utc),
+    )
     record_id = Column(Integer, ForeignKey("records.id"), nullable=False)
 
     record = relationship("Record", back_populates="transcription")
