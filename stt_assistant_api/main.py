@@ -4,9 +4,11 @@ from core.db_session import Base, engine
 
 from api.router import api_router
 
+from config import api_settings
+
 
 app = FastAPI(
-    title="stt-assistant-api",
+    title=f"stt-assistant-api-{api_settings.ENV}",
     description="The STT-Assistant API that transcribes audio into editable text",
 )
 

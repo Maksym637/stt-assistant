@@ -5,6 +5,7 @@ from pydantic import BaseModel
 
 class TranscriptionBase(BaseModel):
     language_code: str
+    transcription: str
 
 
 class TranscriptionCreate(TranscriptionBase):
@@ -13,7 +14,6 @@ class TranscriptionCreate(TranscriptionBase):
 
 class TranscriptionResponse(TranscriptionBase):
     id: int
-    transcription: str
     create_at: datetime
     record_id: int
 

@@ -13,3 +13,7 @@ def create_record(db: Session, data: RecordCreate):
     db.refresh(record)
 
     return record
+
+
+def get_record_by_id(db: Session, id: int):
+    return db.query(Record).filter(Record.id == id).first()

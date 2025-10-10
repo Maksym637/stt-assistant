@@ -25,6 +25,16 @@ def upload_to_blob(tmp_path: str, blob_name: str) -> str:
     return container_client.get_blob_client(blob_name).url
 
 
+def download_from_blob(blob_name: str) -> str:
+    tmp_dir = tempfile.mkdtemp()
+    tmp_path = os.path.join(tmp_dir, f"{uuid.uuid4()}.mp3")
+
+    with open(tmp_path, mode="wb") as file:
+        container_client.get_blob_client(blob_name).download_blob().readinto(file)
+
+    return tmp_path
+
+
 def save_tmp_file(upload_file: UploadFile, suffix: str) -> str:
     tmp_dir = tempfile.mkdtemp()
     tmp_path = os.path.join(tmp_dir, f"{uuid.uuid4()}{suffix}")

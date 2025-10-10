@@ -11,7 +11,8 @@ load_dotenv(os.path.join(BASE_ENV_PATH, ".api.env"))
 
 class AZSettings:
     # Configurations for Azure Speech Studio
-    # TODO
+    SPEECH_KEY = os.getenv("SPEECH_KEY")
+    SPEECH_REGION = os.getenv("SPEECH_REGION")
 
     # Configurations for Azure Blob Storage
     STORAGE_CONNECTION_STRING = os.getenv("STORAGE_CONNECTION_STRING")

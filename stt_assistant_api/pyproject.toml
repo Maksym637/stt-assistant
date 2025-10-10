@@ -18,6 +18,7 @@ authlib = "^1.6.5"
 pydantic = {extras = ["email"], version = "^2.11.10"}
 azure-storage-blob = "^12.26.0"
 python-multipart = "^0.0.20"
+azure-cognitiveservices-speech = "^1.46.0"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
