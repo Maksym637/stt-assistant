@@ -2,6 +2,7 @@ import os
 import shutil
 import uuid
 import tempfile
+from urllib.parse import urlparse
 
 from fastapi import UploadFile
 
@@ -16,6 +17,11 @@ blob_service_client = BlobServiceClient.from_connection_string(
 container_client = blob_service_client.get_container_client(
     container=az_settings.BLOB_CONTAINER
 )
+
+
+def get_blob_name_from_url(url: str) -> str:
+    parsed = urlparse(url)
+    return os.path.basename(parsed.path)
 
 
 def upload_to_blob(tmp_path: str, blob_name: str) -> str:

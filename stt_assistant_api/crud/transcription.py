@@ -17,3 +17,7 @@ def create_transcription(db: Session, data: TranscriptionCreate):
     db.refresh(transcription)
 
     return transcription
+
+
+def get_transcription_by_record_id(db: Session, record_id: int):
+    return db.query(Transcription).filter(Transcription.record_id == record_id).first()

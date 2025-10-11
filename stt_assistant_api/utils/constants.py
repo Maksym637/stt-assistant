@@ -3,7 +3,7 @@ from typing import List
 from enum import Enum
 
 
-class SupportedLanguage(str, Enum):
+class SupportedLanguageCode(str, Enum):
     EN = "en-US"
     DE = "de-DE"
     ES = "es-ES"
@@ -12,4 +12,9 @@ class SupportedLanguage(str, Enum):
 
     @classmethod
     def list(cls) -> List[str]:
-        return [lang.value for lang in cls]
+        return [lang_code.value for lang_code in cls]
+
+
+class AudioFormats(Enum):
+    MP3 = "mp3"
+    WAV = "wav"
