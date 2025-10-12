@@ -12,11 +12,17 @@ from schemas.transcription import (
     TranscriptionCreate,
     TranscriptionResponse,
     TranscriptionPayload,
+    TranscriptionItem,
+    TranscriptionAllResponse,
 )
 
 from crud.user import get_user_by_id
 from crud.record import get_record_by_id
-from crud.transcription import create_transcription, get_transcription_by_record_id
+from crud.transcription import (
+    create_transcription,
+    get_transcription_by_record_id,
+    get_transcriptions_by_user_id,
+)
 
 from services.storage_service import get_blob_name_from_url
 from services.speech_service import transcribe_and_cleanup
@@ -34,17 +40,19 @@ router = APIRouter()
     status_code=status.HTTP_200_OK,
     responses={
         400: {
-            "description": [
-                "Provided language code is not supported",
-                "Transcription with the provided record already exists",
-            ]
+            "description": (
+                "**Bad Request:**\n\n"
+                "- Provided language code is not supported  \n"
+                "- Transcription with the provided record already exists"
+            ),
         },
         401: {"description": "Not authenticated"},
         404: {
-            "description": [
-                "Record not found",
-                "User's account not found",
-            ]
+            "description": (
+                "**Not Found:**\n\n"
+                "- Record not found  \n"
+                "- User's account not found"
+            ),
         },
     },
 )
@@ -93,3 +101,38 @@ def process_record(
     )
 
     return transcription
+
+
+@router.get(
+    "/all",
+    response_model=TranscriptionAllResponse,
+    description="Returns all transcriptions with the associated records",
+    status_code=status.HTTP_200_OK,
+    responses={
+        401: {"description": "Not authenticated"},
+        404: {"description": "User's account not found"},
+    },
+)
+def get_all_transcriptions(
+    db: Session = Depends(get_db),
+    auth0_user: Auth0Payload = Depends(get_current_account),
+):
+    db_user = get_user_by_id(db, auth0_user.sub)
+    if not db_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User's account not found"
+        )
+
+    db_transcriptions = get_transcriptions_by_user_id(db, db_user.id)
+    transcriptions = TranscriptionAllResponse(
+        data=[
+            TranscriptionItem(
+                audio_url=audio_url,
+                transcription=transcription,
+                created_at=created_at,
+            )
+            for audio_url, transcription, created_at in db_transcriptions
+        ]
+    )
+
+    return transcriptions

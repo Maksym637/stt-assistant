@@ -1,3 +1,5 @@
+from typing import List
+
 from datetime import datetime
 
 from pydantic import BaseModel
@@ -24,3 +26,13 @@ class TranscriptionResponse(TranscriptionBase):
 
     class Config:
         orm_mode = True
+
+
+class TranscriptionItem(BaseModel):
+    audio_url: str
+    transcription: str
+    created_at: datetime
+
+
+class TranscriptionAllResponse(BaseModel):
+    data: List[TranscriptionItem]

@@ -35,6 +35,12 @@ def upload_audio(
     db: Session = Depends(get_db),
     auth0_user: Auth0Payload = Depends(get_current_account),
 ):
+    db_user = get_user_by_id(db, auth0_user.sub)
+    if not db_user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User's account not found"
+        )
+
     if not file or not file.filename:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -42,15 +48,8 @@ def upload_audio(
         )
 
     suffix = os.path.splitext(file.filename)[-1].lower()
-
     tmp_path = save_tmp_file(file, suffix)
     blob_url = upload_and_cleanup(tmp_path, suffix)
-    db_user = get_user_by_id(db, auth0_user.sub)
-
-    if not db_user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail="User's account not found"
-        )
 
     record = create_record(
         db, data=RecordCreate(audio_url=blob_url, user_id=db_user.id)
