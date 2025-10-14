@@ -13,7 +13,7 @@ from schemas.record import RecordCreate, RecordResponse
 from crud.user import get_user_by_id
 from crud.record import create_record
 
-from services.storage_service import save_tmp_file, upload_and_cleanup
+from services.storage_service import upload_to_blob
 
 
 router = APIRouter()
@@ -25,7 +25,13 @@ router = APIRouter()
     description="Creates a new record by uploading an audio file",
     status_code=status.HTTP_200_OK,
     responses={
-        400: {"description": "Invalid or missing audio file"},
+        400: {
+            "description": (
+                "**Bad Request:**\n\n"
+                "- Invalid or missing audio file  \n"
+                "- Provided audio file already exists"
+            )
+        },
         401: {"description": "Not authenticated"},
         404: {"description": "User's account not found"},
     },
@@ -48,8 +54,13 @@ def upload_audio(
         )
 
     suffix = os.path.splitext(file.filename)[-1].lower()
-    tmp_path = save_tmp_file(file, suffix)
-    blob_url = upload_and_cleanup(tmp_path, suffix)
+    blob_url = upload_to_blob(file, suffix)
+
+    if not blob_url:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Provided audio file already exists",
+        )
 
     record = create_record(
         db, data=RecordCreate(audio_url=blob_url, user_id=db_user.id)
