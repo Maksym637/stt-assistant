@@ -13,7 +13,11 @@ from schemas.record import RecordCreate, RecordResponse
 from crud.user import get_user_by_id
 from crud.record import create_record
 
-from services.storage_service import upload_to_blob
+from services.storage_service import (
+    get_blob_name_from_url,
+    generate_sas_url,
+    upload_to_blob,
+)
 
 
 router = APIRouter()
@@ -62,8 +66,16 @@ def upload_audio(
             detail="Provided audio file already exists",
         )
 
-    record = create_record(
+    db_record = create_record(
         db, data=RecordCreate(audio_url=blob_url, user_id=db_user.id)
+    )
+    record = RecordResponse(
+        audio_url=generate_sas_url(
+            blob_name=get_blob_name_from_url(db_record.audio_url)
+        ),
+        id=db_record.id,
+        created_at=db_record.created_at,
+        user_id=db_record.user_id,
     )
 
     return record

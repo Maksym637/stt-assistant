@@ -10,15 +10,14 @@ load_dotenv(os.path.join(BASE_ENV_PATH, ".api.env"))
 
 
 class AZSettings:
-    # Configurations for Azure Speech Studio
     SPEECH_KEY = os.getenv("SPEECH_KEY")
     SPEECH_REGION = os.getenv("SPEECH_REGION")
 
-    # Configurations for Azure Blob Storage
     STORAGE_CONNECTION_STRING = os.getenv("STORAGE_CONNECTION_STRING")
-    BLOB_CONTAINER = os.getenv("BLOB_CONTAINER")
+    STORAGE_ACCOUNT_NAME = os.getenv("STORAGE_ACCOUNT_NAME")
+    STORAGE_ACCOUNT_KEY = os.getenv("STORAGE_ACCOUNT_KEY")
+    STORAGE_BLOB_CONTAINER = os.getenv("STORAGE_BLOB_CONTAINER")
 
-    # Configurations for Azure Database for PostgreSQL
     DB_HOST = os.getenv("DB_HOST")
     DB_PORT = os.getenv("DB_PORT")
     DB_USER = os.getenv("DB_USER")

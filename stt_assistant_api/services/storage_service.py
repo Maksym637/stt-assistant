@@ -3,10 +3,15 @@ import shutil
 import uuid
 import tempfile
 from urllib.parse import urlparse
+from datetime import datetime, timezone, timedelta
 
 from fastapi import UploadFile
 
-from azure.storage.blob import BlobServiceClient
+from azure.storage.blob import (
+    BlobServiceClient,
+    BlobSasPermissions,
+    generate_blob_sas,
+)
 
 from utils.constants import AudioFormats
 
@@ -17,7 +22,7 @@ blob_service_client = BlobServiceClient.from_connection_string(
     conn_str=az_settings.STORAGE_CONNECTION_STRING
 )
 container_client = blob_service_client.get_container_client(
-    container=az_settings.BLOB_CONTAINER
+    container=az_settings.STORAGE_BLOB_CONTAINER
 )
 
 
@@ -31,6 +36,24 @@ def get_deterministic_blob_name(filename: str, suffix: str) -> str:
     deterministic_uuid = uuid.uuid5(uuid.NAMESPACE_URL, base_name)
 
     return f"{deterministic_uuid}{suffix}"
+
+
+def generate_sas_url(blob_name: str, expiry_minutes: int = 5) -> str:
+    sas_token = generate_blob_sas(
+        account_name=az_settings.STORAGE_ACCOUNT_NAME,
+        container_name=az_settings.STORAGE_BLOB_CONTAINER,
+        blob_name=blob_name,
+        account_key=az_settings.STORAGE_ACCOUNT_KEY,
+        permission=BlobSasPermissions(read=True),
+        expiry=datetime.now(timezone.utc) + timedelta(minutes=expiry_minutes),
+    )
+
+    sas_url = (
+        f"https://{az_settings.STORAGE_ACCOUNT_NAME}.blob.core.windows.net/"
+        f"{az_settings.STORAGE_BLOB_CONTAINER}/{blob_name}?{sas_token}"
+    )
+
+    return sas_url
 
 
 def upload_to_blob(upload_file: UploadFile, suffix: str) -> str | None:

@@ -24,8 +24,8 @@ from crud.transcription import (
     get_transcriptions_by_user_id,
 )
 
-from services.storage_service import get_blob_name_from_url
-from services.speech_service import transcribe_and_cleanup
+from services.storage_service import get_blob_name_from_url, generate_sas_url
+from services.speech_service import transcribe_audio
 
 from utils.constants import SupportedLanguageCode
 
@@ -86,7 +86,7 @@ def process_record(
             detail="Transcription with the provided record already exists",
         )
 
-    transcribed_text = transcribe_and_cleanup(
+    transcribed_text = transcribe_audio(
         blob_name=get_blob_name_from_url(db_record.audio_url),
         language_code=language_code,
     )
@@ -127,7 +127,7 @@ def get_all_transcriptions(
     transcriptions = TranscriptionAllResponse(
         data=[
             TranscriptionItem(
-                audio_url=audio_url,
+                audio_url=generate_sas_url(blob_name=get_blob_name_from_url(audio_url)),
                 transcription=transcription,
                 created_at=created_at,
             )

@@ -27,7 +27,7 @@ def convert_mp3_to_wav(mp3_path: str) -> str:
     return wav_path
 
 
-def transcribe_and_cleanup(blob_name: str, language_code: str) -> str:
+def transcribe_audio(blob_name: str, language_code: str) -> str:
     tmp_path, wav_path = None, None
 
     try:
