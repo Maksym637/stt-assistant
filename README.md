@@ -48,8 +48,29 @@ def generate_sas_url(blob_name: str, expiry_minutes: int = 5) -> str:
 ```
 3. Implementation of <ins>client factory fixture</ins>:
 ```python
-# TODO
+@pytest.fixture
+def client_factory():
+    def make_client(sub: str, email: str, is_authenticated=True):
+        if not is_authenticated:
+            return TestClient(app)
+
+        app.dependency_overrides[get_current_account] = lambda: Auth0Payload(
+            sub=sub, email=email
+        )
+        client = TestClient(app)
+
+        return client
+
+    yield make_client
+
+    app.dependency_overrides.clear()
 ```
+- - -
+### Improvements to consider
+1. Organize business logic in the following modules using classes:
+    - `/services/speech_service.py`
+    - `/services/storage_service.py`
+2. With regard to the verification of audio file uniqueness in Blob storage, use hashing of the audio file content
 - - -
 ### Project execution
 #### Prerequisites:
@@ -108,7 +129,12 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 TODO
 - - -
 ### Tests execution
-TODO
+To execute tests, follow these steps:
+1. Install all dependencies and activate poetry as described earlier in the `BE execution` 
+2. Execute tests with coverage using the command below:
+```bash
+PYTHONPATH=. pytest --cov
+```
 - - -
 ### Demonstration
 TODO
