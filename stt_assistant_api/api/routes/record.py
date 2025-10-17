@@ -1,5 +1,7 @@
 import os
 
+from typing import Optional
+
 from sqlalchemy.orm import Session
 
 from fastapi import APIRouter, Depends, UploadFile, File, HTTPException, status
@@ -41,7 +43,7 @@ router = APIRouter()
     },
 )
 def upload_audio(
-    file: UploadFile = File(...),
+    file: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db),
     auth0_user: Auth0Payload = Depends(get_current_account),
 ):

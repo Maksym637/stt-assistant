@@ -3,9 +3,7 @@ from unittest.mock import MagicMock, patch
 from fastapi import HTTPException, status
 from fastapi.testclient import TestClient
 
-from schemas.user import UserResponse
-
-from tests.data.data import TEST_HEADERS, TEST_USER_1_PAYLOAD
+from tests.data.data import TEST_HEADERS, TEST_PAYLOAD, TEST_USER
 
 
 @patch("api.routes.user.get_user_by_id")
@@ -13,15 +11,10 @@ def test_get_authenticated_user_200(
     mock_get_user_by_id: MagicMock, client_factory: TestClient
 ):
     client: TestClient = client_factory(
-        sub=TEST_USER_1_PAYLOAD["sub"],
-        email=TEST_USER_1_PAYLOAD["email"],
+        sub=TEST_PAYLOAD["sub"], email=TEST_PAYLOAD["email"]
     )
 
-    mock_get_user_by_id.return_value = UserResponse(
-        id=1,
-        auth0_id=TEST_USER_1_PAYLOAD["sub"],
-        email=TEST_USER_1_PAYLOAD["email"],
-    )
+    mock_get_user_by_id.return_value = TEST_USER
 
     response = client.get(url="/user/me", headers=TEST_HEADERS)
 
@@ -29,8 +22,8 @@ def test_get_authenticated_user_200(
     assert response.status_code == 200
     assert response.json() == {
         "id": 1,
-        "auth0_id": TEST_USER_1_PAYLOAD["sub"],
-        "email": TEST_USER_1_PAYLOAD["email"],
+        "auth0_id": TEST_PAYLOAD["sub"],
+        "email": TEST_PAYLOAD["email"],
     }
 
 
@@ -39,8 +32,7 @@ def test_get_authenticated_user_404(
     mock_get_user_by_id: MagicMock, client_factory: TestClient
 ):
     client: TestClient = client_factory(
-        sub=TEST_USER_1_PAYLOAD["sub"],
-        email=TEST_USER_1_PAYLOAD["email"],
+        sub=TEST_PAYLOAD["sub"], email=TEST_PAYLOAD["email"]
     )
 
     mock_get_user_by_id.return_value = None
@@ -57,8 +49,8 @@ def test_get_authenticated_user_401(
     mock_verify_jwt_token: MagicMock, client_factory: TestClient
 ):
     client: TestClient = client_factory(
-        sub=TEST_USER_1_PAYLOAD["sub"],
-        email=TEST_USER_1_PAYLOAD["email"],
+        sub=TEST_PAYLOAD["sub"],
+        email=TEST_PAYLOAD["email"],
         is_authenticated=False,
     )
 
@@ -83,16 +75,11 @@ def test_create_authenticated_user_account_200(
     client_factory: TestClient,
 ):
     client: TestClient = client_factory(
-        sub=TEST_USER_1_PAYLOAD["sub"],
-        email=TEST_USER_1_PAYLOAD["email"],
+        sub=TEST_PAYLOAD["sub"], email=TEST_PAYLOAD["email"]
     )
 
     mock_get_user_by_id.return_value = None
-    mock_create_user.return_value = UserResponse(
-        id=1,
-        auth0_id=TEST_USER_1_PAYLOAD["sub"],
-        email=TEST_USER_1_PAYLOAD["email"],
-    )
+    mock_create_user.return_value = TEST_USER
 
     response = client.post(url="/user/create", headers=TEST_HEADERS)
 
@@ -102,8 +89,8 @@ def test_create_authenticated_user_account_200(
     assert response.status_code == 200
     assert response.json() == {
         "id": 1,
-        "auth0_id": TEST_USER_1_PAYLOAD["sub"],
-        "email": TEST_USER_1_PAYLOAD["email"],
+        "auth0_id": TEST_PAYLOAD["sub"],
+        "email": TEST_PAYLOAD["email"],
     }
 
 
@@ -112,15 +99,10 @@ def test_create_authenticated_user_account_409(
     mock_get_user_by_id: MagicMock, client_factory: TestClient
 ):
     client: TestClient = client_factory(
-        sub=TEST_USER_1_PAYLOAD["sub"],
-        email=TEST_USER_1_PAYLOAD["email"],
+        sub=TEST_PAYLOAD["sub"], email=TEST_PAYLOAD["email"]
     )
 
-    mock_get_user_by_id.return_value = UserResponse(
-        id=1,
-        auth0_id=TEST_USER_1_PAYLOAD["sub"],
-        email=TEST_USER_1_PAYLOAD["email"],
-    )
+    mock_get_user_by_id.return_value = TEST_USER
 
     response = client.post(url="/user/create", headers=TEST_HEADERS)
 

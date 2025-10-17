@@ -44,8 +44,8 @@ def get_authenticated_user(
     description="Create a new user for the authenticated user if one does not exist",
     status_code=status.HTTP_200_OK,
     responses={
-        "401": {"description": "Not authenticated"},
-        "409": {"description": "User's account already exists"},
+        401: {"description": "Not authenticated"},
+        409: {"description": "User's account already exists"},
     },
 )
 def create_authenticated_user_account(

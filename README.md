@@ -130,7 +130,7 @@ TODO
 - - -
 ### Tests execution
 To execute tests, follow these steps:
-1. Install all dependencies and activate poetry as described earlier in the `BE execution` 
+1. Install all dependencies and activate poetry as described earlier in the `BE execution` section
 2. Execute tests with coverage using the command below:
 ```bash
 PYTHONPATH=. pytest --cov
