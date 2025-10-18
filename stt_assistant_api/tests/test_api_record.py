@@ -3,9 +3,8 @@ from unittest.mock import MagicMock, patch
 from fastapi import HTTPException, status
 from fastapi.testclient import TestClient
 
-from utils.functions import to_iso_8601
-
 from tests.data.data import (
+    to_iso_8601,
     TEST_HEADERS,
     TEST_PAYLOAD,
     TEST_USER,

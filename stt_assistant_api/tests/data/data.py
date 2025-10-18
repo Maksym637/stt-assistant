@@ -1,12 +1,22 @@
 import datetime
 
+from urllib.parse import urlparse
+
 from schemas.user import UserResponse
 from schemas.record import RecordResponse
-from schemas.transcription import (
-    TranscriptionResponse,
-    TranscriptionItem,
-    TranscriptionAllResponse,
-)
+from schemas.transcription import TranscriptionResponse
+
+
+def to_iso_8601(dt: datetime.datetime) -> str:
+    return dt.isoformat().replace("+00:00", "Z")
+
+
+def tst_get_blob_name_from_url(url: str) -> str:
+    return urlparse(url).path.split("/")[-1]
+
+
+def tst_generate_sas_url(blob_name: str) -> str:
+    return f"https://blob.example.com/{blob_name}?sas_token"
 
 
 TEST_HEADERS = {"Authorization": "Bearer test_token"}
@@ -33,22 +43,20 @@ TEST_TRANSCRIPTION = TranscriptionResponse(
     created_at=datetime.datetime.now(datetime.timezone.utc),
     record_id=1,
 )
-TEST_TRANSCRIPTION_ALL = TranscriptionAllResponse(
-    data=[
-        TranscriptionItem(
-            audio_url="https://blob.example.com/first-phrase-en.mp3?sas_token",
-            transcription="Transcription text 1",
-            created_at=datetime.datetime.now(datetime.timezone.utc),
-        ),
-        TranscriptionItem(
-            audio_url="https://blob.example.com/second-phrase-en.mp3?sas_token",
-            transcription="Transcription text 2",
-            created_at=datetime.datetime.now(datetime.timezone.utc),
-        ),
-        TranscriptionItem(
-            audio_url="https://blob.example.com/third-phrase-en.mp3?sas_token",
-            transcription="Transcription text 3",
-            created_at=datetime.datetime.now(datetime.timezone.utc),
-        ),
-    ]
-)
+TEST_TRANSCRIPTION_ALL_DB = [
+    (
+        "https://blob.example.com/first-phrase-en.mp3?sas_token",
+        "Transcription text 1",
+        datetime.datetime.now(datetime.timezone.utc),
+    ),
+    (
+        "https://blob.example.com/second-phrase-en.mp3?sas_token",
+        "Transcription text 2",
+        datetime.datetime.now(datetime.timezone.utc),
+    ),
+    (
+        "https://blob.example.com/third-phrase-en.mp3?sas_token",
+        "Transcription text 3",
+        datetime.datetime.now(datetime.timezone.utc),
+    ),
+]
