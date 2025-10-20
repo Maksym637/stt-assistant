@@ -1,0 +1,24 @@
+.user-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.user-icon {
+  background-color: rgba(0, 0, 0, 0.65);
+  color: white;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.user-icon:hover {
+  background-color: #333; /* softer hover than black */
+}
+
+/* TODO */

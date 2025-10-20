@@ -28,6 +28,8 @@ class AZSettings:
 class APISettings:
     ENV = os.getenv("ENV")
 
+    ORIGINS = os.getenv("ORIGINS")
+
     AUTH0_DOMAIN = os.getenv("AUTH0_DOMAIN")
     AUTH0_AUDIENCE = os.getenv("AUTH0_AUDIENCE")
 

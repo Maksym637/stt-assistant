@@ -1,0 +1,50 @@
+.audio-upload {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  width: 90%;
+  max-width: 450px;
+  min-height: 150px;
+  margin: 40px auto 20px;
+  padding: 2rem;
+
+  background-color: rgba(128, 128, 128, 0.2);
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.audio-upload:hover {
+  background-color: rgba(128, 128, 128, 0.3);
+}
+
+.audio-upload.disabled {
+  cursor: default;
+  background-color: rgba(128, 128, 128, 0.15);
+}
+
+.upload-placeholder {
+  font-size: 1.25rem;
+  color: #555;
+  text-align: center;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 1rem;
+}
+
+.audio-upload audio {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.audio-upload input:focus-visible + .upload-placeholder {
+  outline: 2px dashed #888;
+  outline-offset: 4px;
+}
