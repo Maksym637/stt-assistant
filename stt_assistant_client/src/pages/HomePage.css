@@ -1,16 +1,5 @@
 /* TODO */
 
-.home-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background-color: #fafafa;
-  background-image: url("/background.png");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
 .home-header {
   position: fixed;
   top: 0;
@@ -64,7 +53,7 @@
   margin-top: 20px;
   padding: 10px 16px;
   font-size: 15px;
-  border-radius: 8px;
+  border-radius: 25px;
   border: none;
   background-color: rgba(0, 0, 0, 0.65);
   color: white;
@@ -73,10 +62,14 @@
 }
 
 .home-content button:disabled {
-  background-color: #9bbce3;
+  background-color: rgba(0, 0, 0, 0.525);
   cursor: not-allowed;
 }
 
 .home-content button:hover:not(:disabled) {
   background-color: black;
+}
+
+.process-button {
+  font-family: "Times New Roman", Times, serif;
 }

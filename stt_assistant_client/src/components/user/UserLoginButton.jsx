@@ -7,7 +7,7 @@ export const UserLoginButton = () => {
 
   return (
     <>
-      <button onClick={() => loginWithRedirect()}>Log In</button>
+      <button onClick={() => loginWithRedirect()}>Log in with Auth0</button>
     </>
   );
 };
