@@ -1,0 +1,290 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "stt-assistant-api-dev",
+    "description": "The STT-Assistant API that transcribes audio into editable text",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/user/me": {
+      "get": {
+        "tags": ["User"],
+        "summary": "Get Authenticated User",
+        "description": "Returns the authenticated user's account details",
+        "operationId": "get_authenticated_user_user_me_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponse" }
+              }
+            }
+          },
+          "401": { "description": "Not authenticated" },
+          "404": { "description": "User's account not found" }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/user/create": {
+      "post": {
+        "tags": ["User"],
+        "summary": "Create Authenticated User Account",
+        "description": "Create a new user for the authenticated user if one does not exist",
+        "operationId": "create_authenticated_user_account_user_create_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/UserResponse" }
+              }
+            }
+          },
+          "401": { "description": "Not authenticated" },
+          "409": { "description": "User's account already exists" }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/record/create": {
+      "post": {
+        "tags": ["Record"],
+        "summary": "Upload Audio",
+        "description": "Creates a new record by uploading an audio file",
+        "operationId": "upload_audio_record_create_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_audio_record_create_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/RecordResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "**Bad Request:**\n\n- Invalid or missing audio file  \n- Provided audio file already exists"
+          },
+          "401": { "description": "Not authenticated" },
+          "404": { "description": "User's account not found" },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/transcription/create": {
+      "post": {
+        "tags": ["Transcription"],
+        "summary": "Process Record",
+        "description": "Creates a new transcription by processing an audio file",
+        "operationId": "process_record_transcription_create_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/TranscriptionPayload" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TranscriptionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "**Bad Request:**\n\n- Provided language code is not supported  \n- Transcription with the provided record already exists"
+          },
+          "401": { "description": "Not authenticated" },
+          "404": {
+            "description": "**Not Found:**\n\n- Record not found  \n- User's account not found"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    },
+    "/transcription/all": {
+      "get": {
+        "tags": ["Transcription"],
+        "summary": "Get All Transcriptions",
+        "description": "Returns all transcriptions with the associated records",
+        "operationId": "get_all_transcriptions_transcription_all_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TranscriptionAllResponse"
+                }
+              }
+            }
+          },
+          "401": { "description": "Not authenticated" },
+          "404": { "description": "User's account not found" }
+        },
+        "security": [{ "OAuth2PasswordBearer": [] }]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_upload_audio_record_create_post": {
+        "properties": {
+          "file": {
+            "anyOf": [
+              { "type": "string", "format": "binary" },
+              { "type": "null" }
+            ],
+            "title": "File"
+          }
+        },
+        "type": "object",
+        "title": "Body_upload_audio_record_create_post"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "RecordResponse": {
+        "properties": {
+          "audio_url": { "type": "string", "title": "Audio Url" },
+          "id": { "type": "integer", "title": "Id" },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "user_id": { "type": "integer", "title": "User Id" }
+        },
+        "type": "object",
+        "required": ["audio_url", "id", "created_at", "user_id"],
+        "title": "RecordResponse"
+      },
+      "TranscriptionAllResponse": {
+        "properties": {
+          "data": {
+            "items": { "$ref": "#/components/schemas/TranscriptionItem" },
+            "type": "array",
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": ["data"],
+        "title": "TranscriptionAllResponse"
+      },
+      "TranscriptionItem": {
+        "properties": {
+          "audio_url": { "type": "string", "title": "Audio Url" },
+          "transcription": { "type": "string", "title": "Transcription" },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": ["audio_url", "transcription", "created_at"],
+        "title": "TranscriptionItem"
+      },
+      "TranscriptionPayload": {
+        "properties": {
+          "record_id": { "type": "integer", "title": "Record Id" },
+          "language_code": { "type": "string", "title": "Language Code" }
+        },
+        "type": "object",
+        "required": ["record_id", "language_code"],
+        "title": "TranscriptionPayload"
+      },
+      "TranscriptionResponse": {
+        "properties": {
+          "language_code": { "type": "string", "title": "Language Code" },
+          "transcription": { "type": "string", "title": "Transcription" },
+          "id": { "type": "integer", "title": "Id" },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "record_id": { "type": "integer", "title": "Record Id" }
+        },
+        "type": "object",
+        "required": [
+          "language_code",
+          "transcription",
+          "id",
+          "created_at",
+          "record_id"
+        ],
+        "title": "TranscriptionResponse"
+      },
+      "UserResponse": {
+        "properties": {
+          "email": { "type": "string", "format": "email", "title": "Email" },
+          "id": { "type": "integer", "title": "Id" },
+          "auth0_id": { "type": "string", "title": "Auth0 Id" }
+        },
+        "type": "object",
+        "required": ["email", "id", "auth0_id"],
+        "title": "UserResponse"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": { "type": "string", "title": "Message" },
+          "type": { "type": "string", "title": "Error Type" }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "OAuth2PasswordBearer": {
+        "type": "oauth2",
+        "flows": { "password": { "scopes": {}, "tokenUrl": "token" } }
+      }
+    }
+  }
+}

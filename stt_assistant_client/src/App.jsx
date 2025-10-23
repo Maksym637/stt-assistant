@@ -32,18 +32,18 @@ function App() {
       try {
         await api.post(`${USER_ENDPOINT}/create`);
       } catch (error) {
-        if (error.response.status === 409) {
-          console.error(error.response?.data?.detail);
-        } else {
-          console.error(`The following error occurred: ${error}`);
-        }
+        console.error(
+          `[${error.response.status}] ${error.response.data.detail}`
+        );
       }
 
       // --- Process of getting a user ---
       try {
         await api.get(`${USER_ENDPOINT}/me`);
       } catch (error) {
-        console.error(`The following error occured: ${error}`);
+        console.error(
+          `[${error.response.status}] ${error.response.data.detail}`
+        );
       }
 
       navigate(HOME_ROUTE);

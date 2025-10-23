@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth0 } from "@auth0/auth0-react";
@@ -24,22 +24,18 @@ export const HomePage = () => {
   const { getAccessToken } = useAuthHelper();
 
   const navigate = useNavigate();
+  const audioUploadRef = useRef();
 
-  const [file, setFile] = useState(null);
+  const [_, setAudioFile] = useState(null);
+  const [recordId, setRecordId] = useState(null);
   const [transcription, setTranscription] = useState("");
 
   const [loading, setLoading] = useState(false);
 
-  const handleUpload = (f) => {
-    setFile(f);
+  // --- Process of uploading an audio file ---
+  const handleUpload = async (file) => {
     setTranscription("");
-  };
-
-  const handleProcess = async () => {
-    if (!file) {
-      return alert("Please upload an audio file first.");
-    }
-
+    setRecordId(null);
     setLoading(true);
 
     try {
@@ -53,18 +49,43 @@ export const HomePage = () => {
         `${RECORD_ENDPOINT}/create`,
         formData
       );
+      setRecordId(recordResponse.data.id);
+
+      audioUploadRef.current.setPreview(file);
+    } catch (error) {
+      setAudioFile(null);
+      setRecordId(null);
+      audioUploadRef.current.reset();
+
+      alert(`[${error.response.status}] ${error.response.data.detail}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- Process of transcribing an audio file ---
+  const handleTranscription = async () => {
+    if (!recordId) {
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const accessToken = await getAccessToken();
+      const api = createAxiosInstance(accessToken);
 
       const transcriptionResponse = await api.post(
         `${TRANSCRIPTION_ENDPOINT}/create`,
         {
-          record_id: recordResponse.data.id,
+          record_id: recordId,
           language_code: "en-US",
         }
       );
 
       setTranscription(transcriptionResponse.data.transcription);
     } catch (error) {
-      alert(error.response?.data?.detail);
+      alert(`[${error.response.status}] ${error.response.data.detail}`);
     } finally {
       setLoading(false);
     }
@@ -85,14 +106,18 @@ export const HomePage = () => {
 
       <main className="home-content">
         <h2>Upload and Process Audio</h2>
-        <AudioUpload onFileSelect={handleUpload} />
+        <AudioUpload ref={audioUploadRef} onFileSelect={handleUpload} />
 
         <button
-          onClick={handleProcess}
-          disabled={loading}
+          onClick={handleTranscription}
+          disabled={loading || !recordId}
           className="process-button"
         >
-          {loading ? "Processing..." : "Perform audio processing"}
+          {loading
+            ? "Processing..."
+            : recordId
+            ? "Perform audio processing"
+            : "Upload audio first"}
         </button>
 
         {transcription && <TranscriptionBox text={transcription} />}

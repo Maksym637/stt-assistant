@@ -1,18 +1,27 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useImperativeHandle, forwardRef } from "react";
 
 import "./AudioUpload.css";
 
-export const AudioUpload = ({ onFileSelect }) => {
+export const AudioUpload = forwardRef(({ onFileSelect }, ref) => {
   const [audioUrl, setAudioUrl] = useState(null);
   const fileInputRef = useRef(null);
 
+  useImperativeHandle(ref, () => ({
+    reset: () => {
+      setAudioUrl(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    },
+    setPreview: (file) => {
+      const url = URL.createObjectURL(file);
+      setAudioUrl(url);
+    },
+  }));
+
   const handleFileChange = (e) => {
     const file = e.target.files[0];
-
     if (file) {
-      const url = URL.createObjectURL(file);
-
-      setAudioUrl(url);
       onFileSelect(file);
     }
   };
@@ -34,7 +43,6 @@ export const AudioUpload = ({ onFileSelect }) => {
           onChange={handleFileChange}
           style={{ display: "none" }}
         />
-
         {!audioUrl && (
           <span className="upload-placeholder">
             Click here to upload audio 📁
@@ -44,4 +52,4 @@ export const AudioUpload = ({ onFileSelect }) => {
       </div>
     </>
   );
-};
+});
