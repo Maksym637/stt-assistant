@@ -11,6 +11,7 @@ import { HISTORY_ROUTE } from "../constants/routes";
 
 import { useAuthHelper } from "../utils/authHelper";
 import { createAxiosInstance } from "../utils/axiosHelper";
+import { LANGUAGE_CODE } from "../utils/codes";
 
 import { LoadingSpinner } from "../components/element/LoadingSpinner";
 import { AudioUpload } from "../components/audio/AudioUpload";
@@ -29,6 +30,7 @@ export const HomePage = () => {
   const [_, setAudioFile] = useState(null);
   const [recordId, setRecordId] = useState(null);
   const [transcription, setTranscription] = useState("");
+  const [selectedLanguage, setSelectedLanguage] = useState("en-US");
 
   const [loading, setLoading] = useState(false);
 
@@ -79,7 +81,7 @@ export const HomePage = () => {
         `${TRANSCRIPTION_ENDPOINT}/create`,
         {
           record_id: recordId,
-          language_code: "en-US",
+          language_code: selectedLanguage,
         }
       );
 
@@ -103,23 +105,34 @@ export const HomePage = () => {
         </button>
         <UserLogoutButton email={user?.email} />
       </header>
-
       <main className="home-content">
         <h2>Upload and Process Audio</h2>
         <AudioUpload ref={audioUploadRef} onFileSelect={handleUpload} />
-
-        <button
-          onClick={handleTranscription}
-          disabled={loading || !recordId}
-          className="process-button"
-        >
-          {loading
-            ? "Processing..."
-            : recordId
-            ? "Perform audio processing"
-            : "Upload audio first"}
-        </button>
-
+        <div className="action-row">
+          <button
+            onClick={handleTranscription}
+            disabled={loading || !recordId}
+            className="process-button"
+          >
+            {loading
+              ? "Processing..."
+              : recordId
+              ? "Perform audio processing"
+              : "Upload audio first"}
+          </button>
+          <select
+            value={selectedLanguage}
+            onChange={(e) => setSelectedLanguage(e.target.value)}
+            disabled={loading || !recordId}
+            className="language-select"
+          >
+            {Object.entries(LANGUAGE_CODE).map(([language, code]) => (
+              <option key={language} value={code}>
+                {language}
+              </option>
+            ))}
+          </select>
+        </div>
         {transcription && <TranscriptionBox text={transcription} />}
       </main>
     </>

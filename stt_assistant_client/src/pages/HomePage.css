@@ -73,3 +73,27 @@
 .process-button {
   font-family: "Times New Roman", Times, serif;
 }
+
+.action-row {
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.language-select {
+  padding: 0.625rem 0.875rem;
+  border-radius: 25px;
+  font-family: "Times New Roman", Times, serif;
+  text-align: center;
+  margin-left: 1.5rem;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: white;
+  color: rgba(0, 0, 0, 0.65);
+  padding-right: 1rem;
+}
+
+.language-select:focus {
+  outline: none;
+  box-shadow: none;
+}

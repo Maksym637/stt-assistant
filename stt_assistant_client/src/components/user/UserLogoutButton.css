@@ -18,7 +18,44 @@
 }
 
 .user-icon:hover {
-  background-color: #333; /* softer hover than black */
+  background-color: #333;
 }
 
-/* TODO */
+.user-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 5px;
+  background-color: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 7.5px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-dropdown button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.user-dropdown button svg {
+  width: 20px;
+  height: 20px;
+  fill: rgba(0, 0, 0, 0.65);
+  transition: fill 0.2s ease, transform 0.2s ease;
+}
+
+.user-dropdown button:hover svg {
+  fill: black;
+  transform: scale(1.2);
+}
