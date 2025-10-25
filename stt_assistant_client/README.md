@@ -1,7 +1,11 @@
 ### FE part
-- - -
+
+---
+
 ### Coding points
+
 1. Implementation of the `useAuthHelper` function:
+
 ```js
 /**
  * Custom React hook providing helper methods for working with Auth0 authentication
@@ -26,7 +30,9 @@ export const useAuthHelper = () => {
   return { getAccessToken };
 };
 ```
+
 2. Implementation of the `createAxiosInstance` function:
+
 ```js
 /**
  * Creates and returns a preconfigured Axios instance with authentication headers
@@ -48,7 +54,9 @@ export const createAxiosInstance = (accessToken) => {
   });
 };
 ```
+
 3. Implementation of the `ProtectedRoute` component:
+
 ```js
 /**
  * A higher-order component that protects routes by requiring authentication
@@ -74,7 +82,11 @@ export const ProtectedRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to={LOGIN_ROUTE} />;
 };
 ```
-- - -
+
+---
+
 ### Improvements to consider
+
 - Create a cleaner separation of components into functional and JSX parts
-- - -
+
+---

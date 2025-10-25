@@ -1,7 +1,11 @@
 ### BE part
-- - -
+
+---
+
 ### Coding points
+
 1. Implementation of <ins>SAS tokens</ins> for audio file URL accessibility:
+
 ```python
 def generate_sas_url(blob_name: str, expiry_minutes: int = 5) -> str:
     sas_token = generate_blob_sas(
@@ -20,7 +24,9 @@ def generate_sas_url(blob_name: str, expiry_minutes: int = 5) -> str:
 
     return sas_url
 ```
+
 2. Verification of audio uniqueness using <ins>UUID5</ins>:
+
 ```python
 def get_deterministic_blob_name(filename: str, suffix: str) -> str:
     base_name = os.path.splitext(filename)[0]
@@ -28,7 +34,9 @@ def get_deterministic_blob_name(filename: str, suffix: str) -> str:
 
     return f"{deterministic_uuid}{suffix}"
 ```
+
 3. Implementation of <ins>client factory fixture</ins>:
+
 ```python
 @pytest.fixture
 def client_factory():
@@ -47,10 +55,14 @@ def client_factory():
 
     app.dependency_overrides.clear()
 ```
-- - -
+
+---
+
 ### Improvements to consider
+
 - Organize business logic in the following modules using classes:
-    - _speech_service.py_
-    - _storage_service.py_
+  - _speech_service.py_
+  - _storage_service.py_
 - With regard to the verification of audio file uniqueness in Blob storage, use hashing of the audio file content
-- - -
+
+---
