@@ -1,83 +1,59 @@
 # stt-assistant
 STT-Assistant web app with BE and FE parts that transcribes audio into editable text
 - - -
-### Project description
-TODO
+### Description
+A full-stack web application that transcribes audio into editable text. The application consists of a front-end interface and a back-end server, providing seamless audio transcription and text editing capabilities. All user data and transcriptions are securily stored in an __Azure PostgreSQL Database__, while audio files are managed and stored in an __Azure Storage container__. For accurate and efficient transcription, the application leverages the __Azure Speech service__.
 - - -
-### Services configuration
-1. Azure `Speech` Service:
-```json
-{
-    "Region": "<YOUR RELEVANT REGION>",
-    "API Kind": "SpeechServices",
-    "Pricing tier": "Free"
-}
-```
-2. Azure `Storage account` Service:
-```json
-{}
-```
-3. Azure `Database for PostgreSQL` Service:
-```json
-{}
-```
+### Stack
+- __Backend:__ Python, FastAPI
+- __Frontend:__ JavaScript, React
+- __Auth Services:__ Auth0
+- __Azure Services:__ DB for PostgreSQL, Blob Storage, Speech Service
 - - -
-### Interesting coding points
-1. Implementation of <ins>SAS tokens</ins> for audio file URL accessibility:
-```python
-def generate_sas_url(blob_name: str, expiry_minutes: int = 5) -> str:
-    sas_token = generate_blob_sas(
-        account_name=az_settings.STORAGE_ACCOUNT_NAME,
-        container_name=az_settings.STORAGE_BLOB_CONTAINER,
-        blob_name=blob_name,
-        account_key=az_settings.STORAGE_ACCOUNT_KEY,
-        permission=BlobSasPermissions(read=True),
-        expiry=datetime.now(timezone.utc) + timedelta(minutes=expiry_minutes),
-    )
-
-    sas_url = (
-        f"https://{az_settings.STORAGE_ACCOUNT_NAME}.blob.core.windows.net/"
-        f"{az_settings.STORAGE_BLOB_CONTAINER}/{blob_name}?{sas_token}"
-    )
-
-    return sas_url
-```
-2. Verification of audio uniqueness using <ins>UUID5</ins>:
-```python
-# TODO
-```
-3. Implementation of <ins>client factory fixture</ins>:
-```python
-@pytest.fixture
-def client_factory():
-    def make_client(sub: str, email: str, is_authenticated=True):
-        if not is_authenticated:
-            return TestClient(app)
-
-        app.dependency_overrides[get_current_account] = lambda: Auth0Payload(
-            sub=sub, email=email
-        )
-        client = TestClient(app)
-
-        return client
-
-    yield make_client
-
-    app.dependency_overrides.clear()
-```
+### Architecture
+![stt-assistant-architecture](/docs/stt-assistant-architecture.png)
 - - -
-### Improvements to consider
-1. Organize business logic in the following modules using classes:
-    - `/services/speech_service.py`
-    - `/services/storage_service.py`
-2. With regard to the verification of audio file uniqueness in Blob storage, use hashing of the audio file content
+### DB Schema
+![schema](/docs/schema.png)
+
+__users__
+Stores information about the user
+| Column name | Type    | Description  |
+| ----------- | ------- | ------------ |
+| id          | INT     | Primary key  |
+| auth0_id    | VARCHAR | Auth0 ID     |
+| email       | VARCHAR | User email   |
+
+__records__
+Stores data related to recordings that are considered our audio files
+| Column name | Type      | Description                   |
+| ----------- | --------- | ----------------------------- |
+| id          | INT       | Primary key                   |
+| audio_url   | VARCHAR   | URL address of the audio file |
+| created_at  | TIMESTAMP | Timestamp of record creation  |
+| user_id     | INT       | User id                       |
+
+__transcriptions__
+Stores data related to user transcriptions
+| Column name   | Type      | Description                         |
+| ------------- | --------- | ----------------------------------- |
+| id            | INT       | Primary key                         |
+| transcription | VARCHAR   | Transcription text                  |
+| language_code | VARCHAR   | Language code                       |
+| created_at    | TIMESTAMP | Timestamp of transcription creation |
+| record_id     | INT       | Record id                           |
 - - -
-### Project execution
+### API Documentation
+All API documentation can be found here - [API Redoc](https://maksym637.github.io/stt-assistant/docs/redoc.html) (*All endpoints are Auth0 protected)
+- - -
+### App Execution
 #### Prerequisites:
 Before executing the project, fill in the following files in the `env` folder:
 - `.api.env`:
 ```ini
 ENV=
+
+ORIGINS=
 
 AUTH0_DOMAIN=
 AUTH0_AUDIENCE=
@@ -126,7 +102,15 @@ uvicorn main:app --host 0.0.0.0 --port 8000
 ```
 
 #### FE execution:
-TODO
+1. Go to the `stt_assistant_client` dir
+2. Install all dependencies using the command below:
+```bash
+npm install
+```
+3. Launch the FE part using the command below:
+```bash
+npm run dev
+```
 - - -
 ### Tests execution
 To execute tests, follow these steps:
@@ -137,5 +121,5 @@ PYTHONPATH=. pytest --cov
 ```
 - - -
 ### Demonstration
-TODO
+[Click here to see how application works]()
 - - -
