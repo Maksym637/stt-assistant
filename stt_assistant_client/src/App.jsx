@@ -4,7 +4,7 @@ import { Routes, Route, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
 import { USER_ENDPOINT } from "./constants/apiEndpoints";
-import { HOME_ROUTE } from "./constants/routes";
+import { LOGIN_ROUTE, HISTORY_ROUTE, HOME_ROUTE } from "./constants/routes";
 
 import { useAuthHelper } from "./utils/authHelper";
 import { createAxiosInstance } from "./utils/axiosHelper";
@@ -14,6 +14,7 @@ import { UserLoginButton } from "./components/user/UserLoginButton";
 
 import { ProtectedRoute } from "./pages/ProtectedRoute";
 import { HomePage } from "./pages/HomePage";
+import { HistoryPage } from "./pages/HistoryPage";
 
 import "./components/user/UserLoginButton.css";
 
@@ -46,7 +47,9 @@ function App() {
         );
       }
 
-      navigate(HOME_ROUTE);
+      if (location.pathname === LOGIN_ROUTE) {
+        navigate(HOME_ROUTE);
+      }
     };
 
     if (isAuthenticated && user) {
@@ -77,6 +80,14 @@ function App() {
           element={
             <ProtectedRoute>
               <HomePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path={HISTORY_ROUTE}
+          element={
+            <ProtectedRoute>
+              <HistoryPage />
             </ProtectedRoute>
           }
         />

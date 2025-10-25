@@ -1,5 +1,12 @@
 import { useAuth0 } from "@auth0/auth0-react";
 
+/**
+ * Custom React hook providing helper methods for working with Auth0 authentication
+ *
+ * @function useAuthHelper
+ * @returns {Object} An object containing authentication utility functions
+ * @returns {Function} return.getAccessToken - Retrieves a valid Auth0 access token silently
+ */
 export const useAuthHelper = () => {
   const { getAccessTokenSilently } = useAuth0();
 

@@ -4,13 +4,11 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-
   width: 100%;
   max-width: 500px;
   min-height: 125px;
   margin: 40px auto 20px;
   padding: 30px;
-
   background-color: rgba(128, 128, 128, 0.2);
   border: 1px solid #ccc;
   border-radius: 10px;

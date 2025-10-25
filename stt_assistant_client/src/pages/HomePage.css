@@ -5,11 +5,9 @@
   top: 0;
   left: 0;
   right: 0;
-
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   padding: 10px 30px;
   background-color: #ffffff;
   border-bottom: 1px solid #e5e5e5;
@@ -74,12 +72,8 @@
   font-family: "Times New Roman", Times, serif;
 }
 
-.action-row {
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.language-select {
+/* RL-1.2 */
+/* .language-select {
   padding: 0.625rem 0.875rem;
   border-radius: 25px;
   font-family: "Times New Roman", Times, serif;
@@ -96,4 +90,4 @@
 .language-select:focus {
   outline: none;
   box-shadow: none;
-}
+} */

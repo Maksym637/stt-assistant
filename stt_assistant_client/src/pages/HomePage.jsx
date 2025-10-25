@@ -30,7 +30,8 @@ export const HomePage = () => {
   const [_, setAudioFile] = useState(null);
   const [recordId, setRecordId] = useState(null);
   const [transcription, setTranscription] = useState("");
-  const [selectedLanguage, setSelectedLanguage] = useState("en-US");
+  // RL-1.2
+  // const [selectedLanguage, setSelectedLanguage] = useState("en-US");
 
   const [loading, setLoading] = useState(false);
 
@@ -81,7 +82,7 @@ export const HomePage = () => {
         `${TRANSCRIPTION_ENDPOINT}/create`,
         {
           record_id: recordId,
-          language_code: selectedLanguage,
+          language_code: LANGUAGE_CODE.English,
         }
       );
 
@@ -108,18 +109,18 @@ export const HomePage = () => {
       <main className="home-content">
         <h2>Upload and Process Audio</h2>
         <AudioUpload ref={audioUploadRef} onFileSelect={handleUpload} />
-        <div className="action-row">
-          <button
-            onClick={handleTranscription}
-            disabled={loading || !recordId}
-            className="process-button"
-          >
-            {loading
-              ? "Processing..."
-              : recordId
-              ? "Perform audio processing"
-              : "Upload audio first"}
-          </button>
+        <button
+          onClick={handleTranscription}
+          disabled={loading || !recordId}
+          className="process-button"
+        >
+          {loading
+            ? "Processing..."
+            : recordId
+            ? "Perform audio processing"
+            : "Upload audio first"}
+        </button>
+        {/* RL-1.2
           <select
             value={selectedLanguage}
             onChange={(e) => setSelectedLanguage(e.target.value)}
@@ -131,8 +132,7 @@ export const HomePage = () => {
                 {language}
               </option>
             ))}
-          </select>
-        </div>
+          </select> */}
         {transcription && <TranscriptionBox text={transcription} />}
       </main>
     </>
