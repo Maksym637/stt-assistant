@@ -170,6 +170,6 @@ PYTHONPATH=. pytest --cov
 
 ### Demonstration
 
-[Click here to see how application works]()
+[Click here to see how application works](https://youtu.be/e-cuifbDaGA?si=rc-qnYLXkaEj2Dn0)
 
 ---
